@@ -36,3 +36,4 @@ MSc AI for Business (London)
 
 ## Screenshot
 ![App Screenshot](screenshot.png)
+![App Screenshot](Screenshot1.png)
