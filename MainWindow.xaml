@@ -1,0 +1,194 @@
+﻿<Window x:Class="InventoryManagementSystem.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:InventoryManagementSystem.ViewModels"
+        Title="Inventory Management System" Height="750" Width="1300"
+        Background="#F5F7FA">
+
+    <!-- 🎨 STYLES -->
+    <Window.Resources>
+
+        <!-- Buttons -->
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#2563EB"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <!-- Cards -->
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding" Value="15"/>
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+
+    </Window.Resources>
+
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
+
+    <Grid Margin="20">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- 🔷 HEADER -->
+        <TextBlock Text="📦 Inventory Management Dashboard"
+                   FontSize="26"
+                   FontWeight="Bold"
+                   Margin="0,0,0,20"/>
+
+        <!-- 🔷 DASHBOARD CARDS -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Border Style="{StaticResource CardStyle}" Grid.Column="0">
+                <StackPanel>
+                    <TextBlock Text="Total Items" FontSize="14" Foreground="Gray"/>
+                    <TextBlock Text="{Binding TotalItems}" FontSize="22" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource CardStyle}" Grid.Column="1">
+                <StackPanel>
+                    <TextBlock Text="Total Value" FontSize="14" Foreground="Gray"/>
+                    <TextBlock Text="{Binding TotalInventoryValue}" FontSize="22" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource CardStyle}" Grid.Column="2">
+                <StackPanel>
+                    <TextBlock Text="Low Stock Items" FontSize="14" Foreground="Gray"/>
+                    <TextBlock Text="{Binding LowStockCount}" FontSize="22" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- 🔷 SEARCH -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,10">
+            <TextBox Width="300" Height="35"
+         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+        </StackPanel>
+
+        <!-- 🔷 MAIN CONTENT -->
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 📥 LEFT PANEL (FORM) -->
+            <Border Style="{StaticResource CardStyle}" Grid.Column="0">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+
+                        <TextBlock Text="Add / Edit Item" FontWeight="Bold" Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Item Name"/>
+                        <TextBox Text="{Binding ItemName}" Height="30"/>
+
+                        <TextBlock Text="SKU"/>
+                        <TextBox Text="{Binding SKU}" Height="30"/>
+
+                        <TextBlock Text="Category"/>
+                        <TextBox Text="{Binding Category}" Height="30"/>
+
+                        <TextBlock Text="Purchase Price"/>
+                        <TextBox Text="{Binding PurchasePrice}" Height="30"/>
+
+                        <TextBlock Text="Selling Price"/>
+                        <TextBox Text="{Binding SellingPrice}" Height="30"/>
+
+                        <TextBlock Text="Quantity"/>
+                        <TextBox Text="{Binding Quantity}" Height="30"/>
+
+                        <TextBlock Text="Low Stock Threshold"/>
+                        <TextBox Text="{Binding LowStockThreshold}" Height="30"/>
+
+                        <!-- Actions -->
+                        <TextBlock Text="Actions" Margin="0,10,0,5" FontWeight="Bold"/>
+
+                        <WrapPanel>
+                            <Button Content="Add" Command="{Binding AddCommand}"/>
+                            <Button Content="Update" Command="{Binding UpdateCommand}"/>
+                            <Button Content="Delete" Command="{Binding DeleteCommand}"/>
+                        </WrapPanel>
+
+                        <WrapPanel>
+                            <Button Content="Low Stock" Command="{Binding ShowLowStockCommand}"/>
+                            <Button Content="Show All" Command="{Binding ShowAllCommand}"/>
+                        </WrapPanel>
+
+                        <!-- Stock -->
+                        <TextBlock Text="Stock Adjustment" Margin="0,10,0,5" FontWeight="Bold"/>
+                        <TextBox Text="{Binding AdjustmentAmount}" Height="30"/>
+
+                        <WrapPanel>
+                            <Button Content="Increase" Command="{Binding IncreaseStockCommand}"/>
+                            <Button Content="Decrease" Command="{Binding DecreaseStockCommand}"/>
+                        </WrapPanel>
+
+                        <!-- 🔥 EXPORT SECTION -->
+                        <TextBlock Text="Reports" Margin="0,10,0,5" FontWeight="Bold"/>
+
+                        <Button Content="📊 Export Inventory Report (Excel)"
+                    Height="35"
+                    Background="#16A34A"
+                    Command="{Binding ExportExcelCommand}"/>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <!-- 📊 RIGHT PANEL (GRID) -->
+            <Border Style="{StaticResource CardStyle}" Grid.Column="1">
+                <DataGrid ItemsSource="{Binding Items}"
+                          SelectedItem="{Binding SelectedItem}"
+                          AutoGenerateColumns="False"
+                          HeadersVisibility="Column"
+                          GridLinesVisibility="None"
+                          RowBackground="White"
+                          AlternatingRowBackground="#F9FAFB">
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                        <DataGridTextColumn Header="SKU" Binding="{Binding SKU}" Width="*"/>
+                        <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="*"/>
+                        <DataGridTextColumn Header="Purchase" Binding="{Binding PurchasePrice}" Width="*"/>
+                        <DataGridTextColumn Header="Selling" Binding="{Binding SellingPrice}" Width="*"/>
+                        <DataGridTextColumn Header="Qty" Binding="{Binding Quantity}" Width="*"/>
+                        <DataGridTextColumn Header="Threshold" Binding="{Binding LowStockThreshold}" Width="*"/>
+                        <DataGridTextColumn Header="Created" Binding="{Binding CreatedDate}" Width="*"/>
+                    </DataGrid.Columns>
+
+                    <!-- Low stock highlight -->
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsLowStock}" Value="True">
+                                    <Setter Property="Background" Value="#FECACA"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+
+                </DataGrid>
+            </Border>
+
+        </Grid>
+
+    </Grid>
+</Window>
