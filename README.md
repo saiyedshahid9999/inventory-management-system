@@ -33,3 +33,6 @@ Helps small businesses or internal teams manage inventory efficiently with struc
 ## Author
 Shahid Saiyed  
 MSc AI for Business (London)
+
+## Screenshot
+![App Screenshot](screenshot.png)
